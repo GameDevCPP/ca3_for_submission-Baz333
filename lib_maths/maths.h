@@ -2,6 +2,7 @@
 
 #include <SFML/System.hpp>
 #include <cmath>
+#include <cstdint>
 #include <iomanip>  // std::setprecision
 #include <iostream> // std::cout, std::fixed
 #include <sstream>
