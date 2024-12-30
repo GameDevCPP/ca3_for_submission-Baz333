@@ -34,6 +34,9 @@ public:
 	sf::RectangleShape* greenBar;
 	sf::Text* healthText;
 
+	sf::Text* numPickupsText;
+	sf::Text* speedPowerupText;
+
 	// Enemies
 	float totalTime;
 	int monsterCount;

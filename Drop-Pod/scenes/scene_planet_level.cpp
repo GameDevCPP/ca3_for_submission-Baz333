@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #include "../components/cmp_pickup.h"
+#include "../components/cmp_powerup_speed.h"
 
 using namespace std;
 using namespace sf;
@@ -58,6 +59,9 @@ void PlanetLevelScene::init()
     timer = new Text();
     endText = new Text();
     endExitText = new Text();
+
+    numPickupsText = new Text();
+    speedPowerupText = new Text();
 
     // Shooting Delay
     fireTime = 0.f;
@@ -161,6 +165,16 @@ void PlanetLevelScene::Load() {
     endExitText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
     endExitText->setCharacterSize(30);
 
+    numPickupsText->setString("Materials: ");
+    numPickupsText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    numPickupsText->setCharacterSize(30);
+    numPickupsText->setPosition(50, 50);
+
+    speedPowerupText->setString("[1] Speed-Up (1 material)");
+    speedPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    speedPowerupText->setCharacterSize(20);
+    speedPowerupText->setPosition(50, 100);
+
     // Set load to true when finished.
     setLoaded(true);
 }
@@ -187,6 +201,14 @@ void PlanetLevelScene::Update(const double& dt) {
     {
         // Player updates -----------------------------------------------------------------------------------------------
         fireTime -= dt;
+
+        auto powerups = player->GetCompatibleComponent<SpeedPowerupComponent>();
+        auto movementCmp = player->GetCompatibleComponent<ActorMovementComponent>()[0];
+        if(!powerups.empty()) {
+            movementCmp->setSpeed(400.f);
+        } else {
+            movementCmp->setSpeed(200.f);
+        }
 
         if (fireTime <= 0 && Mouse::isButtonPressed(Mouse::Left)) {
             player->GetCompatibleComponent<ShootingComponent>()[0]->Fire();
@@ -239,6 +261,9 @@ void PlanetLevelScene::Update(const double& dt) {
         greenBar->setSize(Vector2f(playerHealth * 3, 30));
         healthText->setString("Health: " + to_string(playerHealth));
 
+        auto playerPickups = player->GetCompatibleComponent<PlayerComponent>()[0]->getNumPickups();
+        numPickupsText->setString("Materials: " + to_string(playerPickups));
+
         Scene::Update(dt);
     }
     else
@@ -265,6 +290,8 @@ void PlanetLevelScene::Render() {
     Engine::GetWindow().draw(*redBar);
     Engine::GetWindow().draw(*greenBar);
     Engine::GetWindow().draw(*healthText);
+    Engine::GetWindow().draw(*numPickupsText);
+    Engine::GetWindow().draw(*speedPowerupText);
 
     Engine::setView(gameView); //duplication????
 }

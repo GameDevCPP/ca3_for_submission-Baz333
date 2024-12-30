@@ -2,12 +2,15 @@
 #include "cmp_player.h"
 #include <SFML/Window.hpp>
 
+#include "cmp_powerup_speed.h"
 #include "cmp_sprite.h"
 #include "../drop_pod_game.h"
 using namespace std;
 using namespace sf;
 
 int _health;
+
+static bool wasNum1Pressed = false;
 
 //Constructor
 PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
@@ -38,6 +41,18 @@ void PlayerComponent::update(const double dt)
 	if (_health <= 0)
 	{
 		_parent->setAlive(false);
+	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+		if(!wasNum1Pressed) {
+			if(getNumPickups() >= 1) {
+				setNumPickups(getNumPickups() - 1);
+				_parent->addComponent<SpeedPowerupComponent>();
+			}
+		}
+		wasNum1Pressed = true;
+	} else {
+		wasNum1Pressed = false;
 	}
 
 	float directX = 0.f;
