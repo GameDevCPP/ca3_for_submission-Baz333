@@ -40,6 +40,9 @@ public:
 	int damage;
 	float monsterSpeed;
 
+	// Pickups
+	int pickupCount;
+
 	// Actual HUD
 	float tempTime;
 	int minutes;
@@ -64,6 +67,8 @@ public:
 	void render_end() const;
 
 	void SpawnEnemy(int damage, float speed);
+
+	void SpawnPickups();
 
 	sf::Vector2f random_position() const;
 };

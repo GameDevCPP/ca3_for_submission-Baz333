@@ -19,9 +19,13 @@ public:
 	void setHealth(int health);
 	int getHealth();
 
+	void setNumPickups(int numPickups);
+	int getNumPickups();
+
 	//void move(const double dt, const float dir_x, const float dir_y);
 
 protected:
 
 	int _health;
+	int _numPickups;
 };

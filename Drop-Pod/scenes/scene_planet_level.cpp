@@ -13,6 +13,8 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
+#include "../components/cmp_pickup.h"
+
 using namespace std;
 using namespace sf;
 
@@ -134,6 +136,12 @@ void PlanetLevelScene::Load() {
     for (int i = 0; i < monsterCount; ++i)
     {
         SpawnEnemy(damage, speed);
+    }
+
+    // Pickups Load -------------------------------------------------------------------
+    pickupCount = 2;
+    for(int i = 0; i < pickupCount; ++i) {
+        SpawnPickups();
     }
 
     // HUD ----------------------------------------------------------------------------
@@ -342,4 +350,19 @@ void PlanetLevelScene::SpawnEnemy(int damage, float speed)
     esprite->getSprite().setOrigin(32, 32);
 
     enemy->addTag("enemy");
+}
+
+void PlanetLevelScene::SpawnPickups() {
+    shared_ptr<Texture> pickupSprite = Resources::get<Texture>("pickup.png");
+    shared_ptr<Entity> pickup = makeEntity();
+
+    auto pos = random_position();
+    pickup->setPosition(pos);
+
+    auto psprite = pickup->addComponent<SpriteComponent>();
+    psprite->setTexture(pickupSprite);
+    psprite->getSprite().setScale(2, 2);
+    psprite->getSprite().setOrigin(16, 16);
+
+    auto pattributes = pickup->addComponent<PickupComponent>(player);
 }

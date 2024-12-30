@@ -12,6 +12,7 @@ int _health;
 //Constructor
 PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
 	_health = 100;
+	_numPickups = 0;
 }
 
 void PlayerComponent::setHealth(int health)
@@ -22,6 +23,14 @@ void PlayerComponent::setHealth(int health)
 int PlayerComponent::getHealth()
 {
 	return _health;
+}
+
+void PlayerComponent::setNumPickups(int numPickups) {
+    _numPickups = numPickups;
+}
+
+int PlayerComponent::getNumPickups() {
+    return _numPickups;
 }
 
 void PlayerComponent::update(const double dt)
