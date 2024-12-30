@@ -213,6 +213,9 @@ void PlanetLevelScene::Update(const double& dt) {
             {
                 SpawnEnemy(damage, speed);
             }
+            for (int i = 0; i < pickupCount; ++i) {
+                SpawnPickups();
+            }
             totalTime = 0;
         }
 
