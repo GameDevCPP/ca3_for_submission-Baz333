@@ -15,7 +15,7 @@
 #include <bits/random.h>
 
 #include "../components/cmp_pickup.h"
-#include "../components/cmp_powerup_speed.h"
+#include "../components/cmp_powerup.h"
 
 using namespace std;
 using namespace sf;

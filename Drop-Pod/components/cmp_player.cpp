@@ -2,7 +2,7 @@
 #include "cmp_player.h"
 #include <SFML/Window.hpp>
 
-#include "cmp_powerup_speed.h"
+#include "cmp_powerup.h"
 #include "cmp_sprite.h"
 #include "../drop_pod_game.h"
 using namespace std;
@@ -43,16 +43,18 @@ void PlayerComponent::update(const double dt)
 		_parent->setAlive(false);
 	}
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-		if(!wasNum1Pressed) {
-			if(getNumPickups() >= 1) {
-				setNumPickups(getNumPickups() - 1);
-				_parent->addComponent<SpeedPowerupComponent>();
+	if(_parent->GetCompatibleComponent<PowerupComponent>().empty()) {
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+			if(!wasNum1Pressed) {
+				if(getNumPickups() >= 1) {
+					setNumPickups(getNumPickups() - 1);
+					_parent->addComponent<SpeedPowerupComponent>();
+				}
 			}
+			wasNum1Pressed = true;
+		} else {
+			wasNum1Pressed = false;
 		}
-		wasNum1Pressed = true;
-	} else {
-		wasNum1Pressed = false;
 	}
 
 	float directX = 0.f;
