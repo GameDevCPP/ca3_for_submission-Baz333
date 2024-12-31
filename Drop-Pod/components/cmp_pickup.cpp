@@ -1,6 +1,7 @@
 #include "cmp_pickup.h"
-
+#include "../powerkraft.h"
 #include "cmp_player.h"
+#include "system_resources.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 
 using namespace std;
@@ -14,9 +15,9 @@ void PickupComponent::update(const double dt) {
 	timer += dt;
 
     auto& playerPos = _player->getPosition();
-    auto& enemyPos = _parent->getPosition();
-    float xDistance = playerPos.x - enemyPos.x;
-    float yDistance = playerPos.y - enemyPos.y;
+    auto& pickupPos = _parent->getPosition();
+    float xDistance = playerPos.x - pickupPos.x;
+    float yDistance = playerPos.y - pickupPos.y;
     auto distance = (xDistance * xDistance) + (yDistance * yDistance);
 
 	if(timer > 10.f) {
@@ -27,6 +28,11 @@ void PickupComponent::update(const double dt) {
 	    auto cmp = _player->GetCompatibleComponent<PlayerComponent>()[0];
 	    cmp->setNumPickups(cmp->getNumPickups() + 1);
 		std::cout << cmp->getNumPickups() << std::endl;
+
+		soundPickup_buffer = Resources::get<SoundBuffer>("pickup.wav");
+		soundPickup = make_shared<Sound>(*soundPickup_buffer);
+		soundPickup->setVolume(volume);
+		soundPickup->play();
 	}
 }
 

@@ -1,6 +1,6 @@
 // Shooting component C++ file
 #include "cmp_shooting.h"
-#include "../drop_pod_game.h"
+#include "../powerkraft.h"
 #include "cmp_actor_movement.h"
 #include "cmp_sprite.h"
 #include <SFML/Graphics.hpp>

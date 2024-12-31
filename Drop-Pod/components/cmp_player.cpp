@@ -1,10 +1,10 @@
 // Player component C++ file
 #include "cmp_player.h"
 #include <SFML/Window.hpp>
-
 #include "cmp_powerup.h"
 #include "cmp_sprite.h"
-#include "../drop_pod_game.h"
+#include "../powerkraft.h"
+
 using namespace std;
 using namespace sf;
 
@@ -18,7 +18,7 @@ static bool wasNum4Pressed = false;
 //Constructor
 PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
 	_health = 100;
-	_numPickups = 0;
+	_numPickups = 10;
 }
 
 void PlayerComponent::setHealth(int health)
@@ -56,6 +56,10 @@ void PlayerComponent::update(const double dt)
 				if(getNumPickups() >= 1) {
 					setNumPickups(getNumPickups() - 1);
 					_parent->addComponent<SpeedPowerupComponent>();
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
 				}
 			}
 			wasNum1Pressed = true;
@@ -68,6 +72,10 @@ void PlayerComponent::update(const double dt)
 				if(getNumPickups() >= 2) {
 					setNumPickups(getNumPickups() - 2);
 					_parent->addComponent<ReloadPowerupComponent>();
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
 				}
 			}
 			wasNum2Pressed = true;
@@ -80,18 +88,27 @@ void PlayerComponent::update(const double dt)
 				if(getNumPickups() >= 3) {
 					setNumPickups(getNumPickups() - 3);
 					_parent->addComponent<InstakillPowerupComponent>();
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
 				}
 			}
 			wasNum3Pressed = true;
 		} else {
 			wasNum3Pressed = false;
 		}
-
+	}
+	if(getHealth() < 100) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
 			if(!wasNum4Pressed) {
 				if(getNumPickups() >= 5) {
 					setNumPickups(getNumPickups() - 5);
 					setHealth(getHealth() + 20);
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
 				}
 			}
 			wasNum4Pressed = true;
