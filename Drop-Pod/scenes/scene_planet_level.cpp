@@ -74,16 +74,16 @@ void PlanetLevelScene::init()
     fireTime = 0.f;
 
     bgmFiles = {
-    "res/sound/game_bgm/brawl.wav",
-    "res/sound/game_bgm/cocked.wav",
-    "res/sound/game_bgm/crater.wav",
-    "res/sound/game_bgm/good_luck.wav",
-    "res/sound/game_bgm/howl.wav",
-    "res/sound/game_bgm/inebriated.wav",
-    "res/sound/game_bgm/plates.wav",
-    "res/sound/game_bgm/reps.wav",
-    "res/sound/game_bgm/scalpels.wav",
-    "res/sound/game_bgm/spartan.wav"
+        "res/sound/game_bgm/brawl.wav",
+        "res/sound/game_bgm/cocked.wav",
+        "res/sound/game_bgm/crater.wav",
+        "res/sound/game_bgm/good_luck.wav",
+        "res/sound/game_bgm/howl.wav",
+        "res/sound/game_bgm/inebriated.wav",
+        "res/sound/game_bgm/plates.wav",
+        "res/sound/game_bgm/reps.wav",
+        "res/sound/game_bgm/scalpels.wav",
+        "res/sound/game_bgm/spartan.wav"
     };
 }
 
