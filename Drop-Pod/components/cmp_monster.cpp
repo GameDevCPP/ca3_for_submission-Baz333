@@ -1,6 +1,5 @@
 // C++ file for creating enemies
 #include "cmp_monster.h"
-
 #include "cmp_player.h"
 #include "../scenes/scene_planet_level.h"
 #include "cmp_sprite.h"

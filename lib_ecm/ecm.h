@@ -97,6 +97,21 @@ public:
 	}
 
 	template <typename T>
+	void removeComponent() {
+		static_assert(std::is_base_of<Component, T>::value, "T != component");
+		_components.erase(
+			std::remove_if(
+				_components.begin(),
+				_components.end(),
+				[](const std::shared_ptr<Component>& c) {
+					return typeid(*c) == typeid(T);
+				}
+			),
+			_components.end()
+		);
+	}
+
+	template <typename T>
 	const std::vector<std::shared_ptr<T>> get_components() const {
 		static_assert(std::is_base_of<Component, T>::value, "T != component");
 		std::vector<std::shared_ptr<T>> ret;

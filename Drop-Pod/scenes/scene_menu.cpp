@@ -1,6 +1,6 @@
 #include "scene_menu.h"
 #include "../components/cmp_text.h"
-#include "../drop_pod_game.h"
+#include "../powerkraft.h"
 #include "LevelSystem.h"
 #include <iostream>
 #include"../components/cmp_button.h"
@@ -41,7 +41,7 @@ void MenuScene::Load() {
 
     auto txt = makeEntity();
     auto pos = Vector2f(menuView.getSize().x / 2.0f, menuView.getSize().y / 5.0f);
-    auto t = txt->addComponent<TextComponent>(menuView.getSize().x / 2.0f, menuView.getSize().y / 5.0f, "DROP POD");
+    auto t = txt->addComponent<TextComponent>(menuView.getSize().x / 2.0f, menuView.getSize().y / 5.0f, "PowerKraft");
 
     btnExit = makeEntity();
     auto btnPos = Vector2f(menuView.getSize().x / 2.0f, menuView.getSize().y / 1.5f);
@@ -59,7 +59,7 @@ void MenuScene::Load() {
     if (musicstatus == SoundSource::Stopped || musicstatus == SoundSource::Paused)
     {
         //A more typical and better approach to just simply print an error message might be to use a try-catch block.
-        if (!music.openFromFile("res/sound/Cold-Moon.ogg")) //How can We Ensure that we alway load the correct asset without having to recompile?? DF.
+        if (!music.openFromFile("res/sound/Clair_de_lune.ogg")) //How can We Ensure that we alway load the correct asset without having to recompile?? DF.
             std::cerr << "music broken" <<std::endl; // DF. error message logging is preferred
         music.setVolume(volume);
         music.setLoop(true);

@@ -20,7 +20,7 @@ protected:
 public:
 	static void update(const double dt);
 	static void render();
-	static void fire(const sf::Vector2f& pos);
+	static void fire(const sf::Vector2f& pos, bool isInstakill);
 	static void init();
 	static void setAngle(float a, Bullet& b);
 
@@ -40,7 +40,7 @@ public:
 
 	explicit ShootingComponent(Entity* p);
 
-	void Fire();
+	void Fire(bool isInstakill);
 	void update(double dt) override;
 	void render() override;
 };

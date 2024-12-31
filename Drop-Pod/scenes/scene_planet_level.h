@@ -34,11 +34,26 @@ public:
 	sf::RectangleShape* greenBar;
 	sf::Text* healthText;
 
+	sf::Text* numPickupsText;
+	sf::Text* speedPowerupText;
+	sf::Text* reloadPowerupText;
+	sf::Text* instakillPowerupText;
+	sf::Text* healthPowerupText;
+	sf::RectangleShape* powerupBorder;
+	sf::RectangleShape* powerupBackground;
+	sf::RectangleShape* powerupTimer;
+
+	std::vector<std::string> bgmFiles;
+	sf::Music music;
+
 	// Enemies
 	float totalTime;
 	int monsterCount;
 	int damage;
 	float monsterSpeed;
+
+	// Pickups
+	int pickupCount;
 
 	// Actual HUD
 	float tempTime;
@@ -64,6 +79,8 @@ public:
 	void render_end() const;
 
 	void SpawnEnemy(int damage, float speed);
+
+	void SpawnPickups();
 
 	sf::Vector2f random_position() const;
 };

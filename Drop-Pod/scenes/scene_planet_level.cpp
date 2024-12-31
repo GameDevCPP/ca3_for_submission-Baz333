@@ -1,5 +1,5 @@
 #include "scene_planet_level.h"
-#include "../drop_pod_game.h"
+#include "../powerkraft.h"
 #include "engine.h"
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_player.h"
@@ -12,6 +12,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include <bits/random.h>
+
+#include "../components/cmp_pickup.h"
+#include "../components/cmp_powerup.h"
 
 using namespace std;
 using namespace sf;
@@ -57,8 +61,30 @@ void PlanetLevelScene::init()
     endText = new Text();
     endExitText = new Text();
 
+    numPickupsText = new Text();
+    speedPowerupText = new Text();
+    reloadPowerupText = new Text();
+    instakillPowerupText = new Text();
+    healthPowerupText = new Text();
+    powerupBorder = new RectangleShape();
+    powerupBackground = new RectangleShape();
+    powerupTimer = new RectangleShape();
+
     // Shooting Delay
     fireTime = 0.f;
+
+    bgmFiles = {
+        "res/sound/game_bgm/brawl.wav",
+        "res/sound/game_bgm/cocked.wav",
+        "res/sound/game_bgm/crater.wav",
+        "res/sound/game_bgm/good_luck.wav",
+        "res/sound/game_bgm/howl.wav",
+        "res/sound/game_bgm/inebriated.wav",
+        "res/sound/game_bgm/plates.wav",
+        "res/sound/game_bgm/reps.wav",
+        "res/sound/game_bgm/scalpels.wav",
+        "res/sound/game_bgm/spartan.wav"
+    };
 }
 
 void PlanetLevelScene::Load() {
@@ -136,6 +162,12 @@ void PlanetLevelScene::Load() {
         SpawnEnemy(damage, speed);
     }
 
+    // Pickups Load -------------------------------------------------------------------
+    pickupCount = 2;
+    for(int i = 0; i < pickupCount; ++i) {
+        SpawnPickups();
+    }
+
     // HUD ----------------------------------------------------------------------------
     timer->setString("Timer: 00:00");
     timer->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
@@ -152,6 +184,46 @@ void PlanetLevelScene::Load() {
     endExitText->setString("");
     endExitText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
     endExitText->setCharacterSize(30);
+
+    numPickupsText->setString("Materials: ");
+    numPickupsText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    numPickupsText->setCharacterSize(30);
+    numPickupsText->setPosition(50, 50);
+
+    speedPowerupText->setString("[1] Speed-Up (1 material)");
+    speedPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    speedPowerupText->setCharacterSize(15);
+    speedPowerupText->setPosition(50, 100);
+
+    reloadPowerupText->setString("[2] Reload++ (2 materials)");
+    reloadPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    reloadPowerupText->setCharacterSize(15);
+    reloadPowerupText->setPosition(50, 125);
+
+    instakillPowerupText->setString("[3] Insta-kill (3 materials)");
+    instakillPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    instakillPowerupText->setCharacterSize(15);
+    instakillPowerupText->setPosition(50, 150);
+
+    healthPowerupText->setString("[4] Heal (5 materials)");
+    healthPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    healthPowerupText->setCharacterSize(15);
+    healthPowerupText->setPosition(50, 175);
+
+    powerupBorder->setSize(Vector2f(40, 310));
+    powerupBorder->setFillColor(Color::White);
+    powerupBorder->setOrigin(powerupBorder->getLocalBounds().left + powerupBorder->getLocalBounds().width / 2.0f,
+                          powerupBorder->getLocalBounds().top + powerupBorder->getLocalBounds().height / 2.0f);
+    powerupBorder->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2);
+
+    powerupBackground->setSize(Vector2f(30, 300));
+    powerupBackground->setFillColor(Color::Black);
+    powerupBackground->setOrigin(powerupBackground->getLocalBounds().left + powerupBackground->getLocalBounds().width / 2.0f,
+                          powerupBackground->getLocalBounds().top + powerupBackground->getLocalBounds().height / 2.0f);
+    powerupBackground->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2);
+
+    powerupTimer->setFillColor(Color::Blue);
+    powerupTimer->setPosition(hudView.getSize().x + 100, hudView.getSize().y + 100);
 
     // Set load to true when finished.
     setLoaded(true);
@@ -178,10 +250,36 @@ void PlanetLevelScene::Update(const double& dt) {
     if (!pauseGame)
     {
         // Player updates -----------------------------------------------------------------------------------------------
+        auto reloadPowerup = player->GetCompatibleComponent<ReloadPowerupComponent>();
+        auto speedPowerup = player->GetCompatibleComponent<SpeedPowerupComponent>();
+        auto instakillPowerup = player->GetCompatibleComponent<InstakillPowerupComponent>();
+        auto movementCmp = player->GetCompatibleComponent<ActorMovementComponent>()[0];
+        auto powerup = player->GetCompatibleComponent<PowerupComponent>();
+
         fireTime -= dt;
+        if(!reloadPowerup.empty()) {
+            fireTime -= dt;
+        }
+
+        if(!speedPowerup.empty()) {
+            movementCmp->setSpeed(400.f);
+        } else {
+            movementCmp->setSpeed(200.f);
+        }
+
+        if(!powerup.empty()) {
+            auto remainingTime = powerup[0]->getRemainingTime();
+            auto maxTime = powerup[0]->getMaxTimer();
+            powerupTimer->setSize(Vector2f(30, (remainingTime / maxTime) * 300));
+            powerupTimer->setOrigin(powerupTimer->getLocalBounds().left + powerupTimer->getLocalBounds().width / 2.0f,
+                                  powerupTimer->getLocalBounds().top + powerupTimer->getLocalBounds().height / 2.0f);
+            powerupTimer->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2 + ((maxTime - remainingTime) / maxTime) * 150);
+        } else {
+            powerupTimer->setPosition(hudView.getSize().x + 100, hudView.getSize().y + 100);
+        }
 
         if (fireTime <= 0 && Mouse::isButtonPressed(Mouse::Left)) {
-            player->GetCompatibleComponent<ShootingComponent>()[0]->Fire();
+            player->GetCompatibleComponent<ShootingComponent>()[0]->Fire(!instakillPowerup.empty());
             fireTime = 0.5f;
             soundShoot->play();
         }
@@ -205,7 +303,27 @@ void PlanetLevelScene::Update(const double& dt) {
             {
                 SpawnEnemy(damage, speed);
             }
+            for (int i = 0; i < pickupCount; ++i) {
+                SpawnPickups();
+            }
             totalTime = 0;
+        }
+
+        //Music update ----------------------------------------------------------------------------
+        auto musicstatus = music.getStatus();
+        if (musicstatus == SoundSource::Stopped || musicstatus == SoundSource::Paused)
+        {
+            std::random_device rd;
+            int randomIndex = rd() % 10;
+            std::string randomSong = bgmFiles[randomIndex];
+            if (!music.openFromFile(randomSong)) {
+                std::cerr << "Failed to load music: " << randomSong << std::endl;
+            } else {
+                std::cout << "Now playing: " << randomSong << std::endl;
+            }
+            music.setVolume(volume / 4); //the music was very loud :/
+            music.setLoop(false);
+            music.play();
         }
 
         // HUD update -----------------------------------------------------------------------------
@@ -227,6 +345,9 @@ void PlanetLevelScene::Update(const double& dt) {
         auto playerHealth = player->GetCompatibleComponent<PlayerComponent>()[0]->getHealth();
         greenBar->setSize(Vector2f(playerHealth * 3, 30));
         healthText->setString("Health: " + to_string(playerHealth));
+
+        auto playerPickups = player->GetCompatibleComponent<PlayerComponent>()[0]->getNumPickups();
+        numPickupsText->setString("Materials: " + to_string(playerPickups));
 
         Scene::Update(dt);
     }
@@ -254,6 +375,14 @@ void PlanetLevelScene::Render() {
     Engine::GetWindow().draw(*redBar);
     Engine::GetWindow().draw(*greenBar);
     Engine::GetWindow().draw(*healthText);
+    Engine::GetWindow().draw(*numPickupsText);
+    Engine::GetWindow().draw(*speedPowerupText);
+    Engine::GetWindow().draw(*reloadPowerupText);
+    Engine::GetWindow().draw(*instakillPowerupText);
+    Engine::GetWindow().draw(*healthPowerupText);
+    Engine::GetWindow().draw(*powerupBorder);
+    Engine::GetWindow().draw(*powerupBackground);
+    Engine::GetWindow().draw(*powerupTimer);
 
     Engine::setView(gameView); //duplication????
 }
@@ -342,4 +471,19 @@ void PlanetLevelScene::SpawnEnemy(int damage, float speed)
     esprite->getSprite().setOrigin(32, 32);
 
     enemy->addTag("enemy");
+}
+
+void PlanetLevelScene::SpawnPickups() {
+    shared_ptr<Texture> pickupSprite = Resources::get<Texture>("pickup.png");
+    shared_ptr<Entity> pickup = makeEntity();
+
+    auto pos = random_position();
+    pickup->setPosition(pos);
+
+    auto psprite = pickup->addComponent<SpriteComponent>();
+    psprite->setTexture(pickupSprite);
+    psprite->getSprite().setScale(2, 2);
+    psprite->getSprite().setOrigin(16, 16);
+
+    auto pattributes = pickup->addComponent<PickupComponent>(player);
 }

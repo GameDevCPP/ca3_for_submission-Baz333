@@ -1,22 +1,33 @@
 // Player component C++ file
 #include "cmp_player.h"
 #include <SFML/Window.hpp>
-
+#include "cmp_powerup.h"
 #include "cmp_sprite.h"
-#include "../drop_pod_game.h"
+#include "../powerkraft.h"
+
 using namespace std;
 using namespace sf;
 
 int _health;
 
+static bool wasNum1Pressed = false;
+static bool wasNum2Pressed = false;
+static bool wasNum3Pressed = false;
+static bool wasNum4Pressed = false;
+
 //Constructor
 PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
 	_health = 100;
+	_numPickups = 0;
 }
 
 void PlayerComponent::setHealth(int health)
 {
-	_health = health;
+	if(health > 100) {
+		_health = 100;
+	} else {
+		_health = health;
+	}
 }
 
 int PlayerComponent::getHealth()
@@ -24,11 +35,86 @@ int PlayerComponent::getHealth()
 	return _health;
 }
 
+void PlayerComponent::setNumPickups(int numPickups) {
+    _numPickups = numPickups;
+}
+
+int PlayerComponent::getNumPickups() {
+    return _numPickups;
+}
+
 void PlayerComponent::update(const double dt)
 {
 	if (_health <= 0)
 	{
 		_parent->setAlive(false);
+	}
+
+	if(_parent->GetCompatibleComponent<PowerupComponent>().empty()) {
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+			if(!wasNum1Pressed) {
+				if(getNumPickups() >= 1) {
+					setNumPickups(getNumPickups() - 1);
+					_parent->addComponent<SpeedPowerupComponent>();
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
+				}
+			}
+			wasNum1Pressed = true;
+		} else {
+			wasNum1Pressed = false;
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+			if(!wasNum2Pressed) {
+				if(getNumPickups() >= 2) {
+					setNumPickups(getNumPickups() - 2);
+					_parent->addComponent<ReloadPowerupComponent>();
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
+				}
+			}
+			wasNum2Pressed = true;
+		} else {
+			wasNum2Pressed = false;
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+			if(!wasNum3Pressed) {
+				if(getNumPickups() >= 3) {
+					setNumPickups(getNumPickups() - 3);
+					_parent->addComponent<InstakillPowerupComponent>();
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
+				}
+			}
+			wasNum3Pressed = true;
+		} else {
+			wasNum3Pressed = false;
+		}
+	}
+	if(getHealth() < 100) {
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+			if(!wasNum4Pressed) {
+				if(getNumPickups() >= 5) {
+					setNumPickups(getNumPickups() - 5);
+					setHealth(getHealth() + 20);
+					soundPowerup_buffer = Resources::get<SoundBuffer>("powerup.wav");
+					soundPowerup = make_shared<Sound>(*soundPowerup_buffer);
+					soundPowerup->setVolume(volume);
+					soundPowerup->play();
+				}
+			}
+			wasNum4Pressed = true;
+		} else {
+			wasNum4Pressed = false;
+		}
 	}
 
 	float directX = 0.f;
