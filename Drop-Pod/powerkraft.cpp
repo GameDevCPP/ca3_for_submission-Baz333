@@ -15,5 +15,5 @@ Vector2i resolution;
 int main() {
 	resolution = Vector2i(1280, 720);
 	volume = 20;
-	Engine::Start(resolution.x, resolution.y, "Drop Pod", &menu);
+	Engine::Start(resolution.x, resolution.y, "PowerKraft", &menu);
 }
