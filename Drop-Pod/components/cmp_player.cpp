@@ -18,7 +18,7 @@ static bool wasNum4Pressed = false;
 //Constructor
 PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
 	_health = 100;
-	_numPickups = 10;
+	_numPickups = 0;
 }
 
 void PlayerComponent::setHealth(int health)
