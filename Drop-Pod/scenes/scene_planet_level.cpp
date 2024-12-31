@@ -262,13 +262,7 @@ void PlanetLevelScene::Update(const double& dt) {
         }
 
         if(!speedPowerup.empty()) {
-            auto remainingTime = speedPowerup[0]->getRemainingTime();
-            auto maxTime = speedPowerup[0]->getMaxTimer();
             movementCmp->setSpeed(400.f);
-            powerupTimer->setSize(Vector2f(30, (remainingTime / maxTime) * 300));
-            powerupTimer->setOrigin(powerupTimer->getLocalBounds().left + powerupTimer->getLocalBounds().width / 2.0f,
-                                  powerupTimer->getLocalBounds().top + powerupTimer->getLocalBounds().height / 2.0f);
-            powerupTimer->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2 + ((maxTime - remainingTime) / maxTime) * 150);
         } else {
             movementCmp->setSpeed(200.f);
         }
