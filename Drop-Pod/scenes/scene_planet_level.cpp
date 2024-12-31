@@ -251,13 +251,16 @@ void PlanetLevelScene::Update(const double& dt) {
     {
         // Player updates -----------------------------------------------------------------------------------------------
         fireTime -= dt;
-        //TODO: fireTime powerup
+        auto reloadPowerup = player->GetCompatibleComponent<ReloadPowerupComponent>();
+        if(!reloadPowerup.empty()) {
+            fireTime -= dt;
+        }
 
-        auto powerups = player->GetCompatibleComponent<SpeedPowerupComponent>();
+        auto speedPowerup = player->GetCompatibleComponent<SpeedPowerupComponent>();
         auto movementCmp = player->GetCompatibleComponent<ActorMovementComponent>()[0];
-        if(!powerups.empty()) {
-            auto remainingTime = powerups[0]->getRemainingTime();
-            auto maxTime = powerups[0]->getMaxTimer();
+        if(!speedPowerup.empty()) {
+            auto remainingTime = speedPowerup[0]->getRemainingTime();
+            auto maxTime = speedPowerup[0]->getMaxTimer();
             movementCmp->setSpeed(400.f);
             powerupTimer->setSize(Vector2f(30, (remainingTime / maxTime) * 300));
             powerupTimer->setOrigin(powerupTimer->getLocalBounds().left + powerupTimer->getLocalBounds().width / 2.0f,
@@ -265,6 +268,17 @@ void PlanetLevelScene::Update(const double& dt) {
             powerupTimer->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2 + ((maxTime - remainingTime) / maxTime) * 150);
         } else {
             movementCmp->setSpeed(200.f);
+        }
+
+        auto powerup = player->GetCompatibleComponent<PowerupComponent>();
+        if(!powerup.empty()) {
+            auto remainingTime = powerup[0]->getRemainingTime();
+            auto maxTime = powerup[0]->getMaxTimer();
+            powerupTimer->setSize(Vector2f(30, (remainingTime / maxTime) * 300));
+            powerupTimer->setOrigin(powerupTimer->getLocalBounds().left + powerupTimer->getLocalBounds().width / 2.0f,
+                                  powerupTimer->getLocalBounds().top + powerupTimer->getLocalBounds().height / 2.0f);
+            powerupTimer->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2 + ((maxTime - remainingTime) / maxTime) * 150);
+        } else {
             powerupTimer->setPosition(hudView.getSize().x + 100, hudView.getSize().y + 100);
         }
 

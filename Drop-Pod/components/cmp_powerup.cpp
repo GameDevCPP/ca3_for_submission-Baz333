@@ -9,10 +9,7 @@ PowerupComponent::PowerupComponent(Entity *p, float maxTimer)
 }
 
 void PowerupComponent::update(const double dt) {
-	timer -= dt;
-	if(timer <= 0) {
-		_parent->removeComponent<PowerupComponent>();
-	}
+
 }
 
 float PowerupComponent::getRemainingTime() const {
@@ -32,12 +29,33 @@ SpeedPowerupComponent::SpeedPowerupComponent(Entity *p)
 
 }
 
+void SpeedPowerupComponent::update(const double dt) {
+	timer -= dt;
+	if(timer <= 0) {
+		_parent->removeComponent<SpeedPowerupComponent>();
+	}
+}
+
 ReloadPowerupComponent::ReloadPowerupComponent(Entity *p)
 	:PowerupComponent(p, 15.f) {
 
 }
 
+void ReloadPowerupComponent::update(const double dt) {
+	timer -= dt;
+	if(timer <= 0) {
+		_parent->removeComponent<ReloadPowerupComponent>();
+	}
+}
+
 InstakillPowerupComponent::InstakillPowerupComponent(Entity *p)
 	:PowerupComponent(p, 10.f) {
 
+}
+
+void InstakillPowerupComponent::update(const double dt) {
+	timer -= dt;
+	if(timer <= 0) {
+		_parent->removeComponent<InstakillPowerupComponent>();
+	}
 }
