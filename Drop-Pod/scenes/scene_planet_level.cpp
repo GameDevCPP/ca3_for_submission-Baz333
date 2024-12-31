@@ -62,6 +62,9 @@ void PlanetLevelScene::init()
 
     numPickupsText = new Text();
     speedPowerupText = new Text();
+    powerupBorder = new RectangleShape();
+    powerupBackground = new RectangleShape();
+    powerupTimer = new RectangleShape();
 
     // Shooting Delay
     fireTime = 0.f;
@@ -175,6 +178,21 @@ void PlanetLevelScene::Load() {
     speedPowerupText->setCharacterSize(20);
     speedPowerupText->setPosition(50, 100);
 
+    powerupBorder->setSize(Vector2f(40, 310));
+    powerupBorder->setFillColor(Color::White);
+    powerupBorder->setOrigin(powerupBorder->getLocalBounds().left + powerupBorder->getLocalBounds().width / 2.0f,
+                          powerupBorder->getLocalBounds().top + powerupBorder->getLocalBounds().height / 2.0f);
+    powerupBorder->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2);
+
+    powerupBackground->setSize(Vector2f(30, 300));
+    powerupBackground->setFillColor(Color::Black);
+    powerupBackground->setOrigin(powerupBackground->getLocalBounds().left + powerupBackground->getLocalBounds().width / 2.0f,
+                          powerupBackground->getLocalBounds().top + powerupBackground->getLocalBounds().height / 2.0f);
+    powerupBackground->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2);
+
+    powerupTimer->setFillColor(Color::Blue);
+    powerupTimer->setPosition(hudView.getSize().x + 100, hudView.getSize().y + 100);
+
     // Set load to true when finished.
     setLoaded(true);
 }
@@ -201,13 +219,21 @@ void PlanetLevelScene::Update(const double& dt) {
     {
         // Player updates -----------------------------------------------------------------------------------------------
         fireTime -= dt;
+        //TODO: fireTime powerup
 
         auto powerups = player->GetCompatibleComponent<SpeedPowerupComponent>();
         auto movementCmp = player->GetCompatibleComponent<ActorMovementComponent>()[0];
         if(!powerups.empty()) {
+            auto remainingTime = powerups[0]->getRemainingTime();
+            auto maxTime = powerups[0]->getMaxTimer();
             movementCmp->setSpeed(400.f);
+            powerupTimer->setSize(Vector2f(30, (remainingTime / maxTime) * 300));
+            powerupTimer->setOrigin(powerupTimer->getLocalBounds().left + powerupTimer->getLocalBounds().width / 2.0f,
+                                  powerupTimer->getLocalBounds().top + powerupTimer->getLocalBounds().height / 2.0f);
+            powerupTimer->setPosition(hudView.getSize().x - 50, hudView.getSize().y / 2 + ((maxTime - remainingTime) / maxTime) * 150);
         } else {
             movementCmp->setSpeed(200.f);
+            powerupTimer->setPosition(hudView.getSize().x + 100, hudView.getSize().y + 100);
         }
 
         if (fireTime <= 0 && Mouse::isButtonPressed(Mouse::Left)) {
@@ -292,6 +318,9 @@ void PlanetLevelScene::Render() {
     Engine::GetWindow().draw(*healthText);
     Engine::GetWindow().draw(*numPickupsText);
     Engine::GetWindow().draw(*speedPowerupText);
+    Engine::GetWindow().draw(*powerupBorder);
+    Engine::GetWindow().draw(*powerupBackground);
+    Engine::GetWindow().draw(*powerupTimer);
 
     Engine::setView(gameView); //duplication????
 }

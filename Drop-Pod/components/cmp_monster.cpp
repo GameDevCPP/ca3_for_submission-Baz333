@@ -1,6 +1,5 @@
 // C++ file for creating enemies
 #include "cmp_monster.h"
-#include "cmp_pickup.h"
 #include "cmp_player.h"
 #include "../scenes/scene_planet_level.h"
 #include "cmp_sprite.h"
@@ -64,7 +63,6 @@ void MonsterComponent::update(double dt)
 
 		if (_deathTime >= 1.1)
 		{
-			//TODO: SPAWN PICKUP
 			_parent->setAlive(false);
 			_parent->setVisible(false);
 			_parent->setPosition(Vector2f(-100, -100));

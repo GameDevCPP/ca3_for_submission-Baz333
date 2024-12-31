@@ -4,7 +4,7 @@ using namespace std;
 using namespace sf;
 
 SpeedPowerupComponent::SpeedPowerupComponent(Entity *p) : Component(p) {
-	timer = 20.f;
+	timer = maxTimer;
 }
 
 void SpeedPowerupComponent::update(const double dt) {
@@ -13,5 +13,15 @@ void SpeedPowerupComponent::update(const double dt) {
 		_parent->removeComponent<SpeedPowerupComponent>();
 	}
 }
+
+float SpeedPowerupComponent::getRemainingTime() const {
+	return timer;
+}
+
+float SpeedPowerupComponent::getMaxTimer() const {
+	return maxTimer;
+}
+
+
 
 void SpeedPowerupComponent::render() {}

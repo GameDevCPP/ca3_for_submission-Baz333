@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+//TODO: instakill powerup - pass param into ShootingComponent::Fire()
+
 class Bullet : sf::Sprite {
 protected:
 	void _update(const double dt);

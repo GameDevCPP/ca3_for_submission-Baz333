@@ -20,10 +20,10 @@ void PickupComponent::update(const double dt) {
     auto distance = (xDistance * xDistance) + (yDistance * yDistance);
 
 	if(timer > 10.f) {
-		_parent->setPosition(Vector2f(-100, -100));
+		_parent->setPosition(Vector2f(-1000, -1000));
 	}
 	if(distance < 3500.f) {
-	    _parent->setPosition(Vector2f(-100, -100));
+	    _parent->setPosition(Vector2f(-1000, -1000));
 	    auto cmp = _player->GetCompatibleComponent<PlayerComponent>()[0];
 	    cmp->setNumPickups(cmp->getNumPickups() + 1);
 		std::cout << cmp->getNumPickups() << std::endl;

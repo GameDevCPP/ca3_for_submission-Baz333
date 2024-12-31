@@ -36,6 +36,9 @@ public:
 
 	sf::Text* numPickupsText;
 	sf::Text* speedPowerupText;
+	sf::RectangleShape* powerupBorder;
+	sf::RectangleShape* powerupBackground;
+	sf::RectangleShape* powerupTimer;
 
 	// Enemies
 	float totalTime;
