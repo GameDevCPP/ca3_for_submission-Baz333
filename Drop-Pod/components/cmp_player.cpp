@@ -11,6 +11,9 @@ using namespace sf;
 int _health;
 
 static bool wasNum1Pressed = false;
+static bool wasNum2Pressed = false;
+static bool wasNum3Pressed = false;
+static bool wasNum4Pressed = false;
 
 //Constructor
 PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
@@ -20,7 +23,11 @@ PlayerComponent::PlayerComponent(Entity* p) : ActorMovementComponent(p) {
 
 void PlayerComponent::setHealth(int health)
 {
-	_health = health;
+	if(health > 100) {
+		_health = 100;
+	} else {
+		_health = health;
+	}
 }
 
 int PlayerComponent::getHealth()
@@ -54,6 +61,42 @@ void PlayerComponent::update(const double dt)
 			wasNum1Pressed = true;
 		} else {
 			wasNum1Pressed = false;
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+			if(!wasNum2Pressed) {
+				if(getNumPickups() >= 2) {
+					setNumPickups(getNumPickups() - 2);
+					_parent->addComponent<ReloadPowerupComponent>();
+				}
+			}
+			wasNum2Pressed = true;
+		} else {
+			wasNum2Pressed = false;
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+			if(!wasNum3Pressed) {
+				if(getNumPickups() >= 3) {
+					setNumPickups(getNumPickups() - 3);
+					_parent->addComponent<InstakillPowerupComponent>();
+				}
+			}
+			wasNum3Pressed = true;
+		} else {
+			wasNum3Pressed = false;
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+			if(!wasNum4Pressed) {
+				if(getNumPickups() >= 5) {
+					setNumPickups(getNumPickups() - 5);
+					setHealth(getHealth() + 20);
+				}
+			}
+			wasNum4Pressed = true;
+		} else {
+			wasNum4Pressed = false;
 		}
 	}
 

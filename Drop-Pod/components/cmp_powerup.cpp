@@ -31,3 +31,13 @@ SpeedPowerupComponent::SpeedPowerupComponent(Entity *p)
 	:PowerupComponent(p,20.f) {
 
 }
+
+ReloadPowerupComponent::ReloadPowerupComponent(Entity *p)
+	:PowerupComponent(p, 15.f) {
+
+}
+
+InstakillPowerupComponent::InstakillPowerupComponent(Entity *p)
+	:PowerupComponent(p, 10.f) {
+
+}

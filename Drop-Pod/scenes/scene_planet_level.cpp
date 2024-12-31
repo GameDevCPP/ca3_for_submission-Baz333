@@ -63,6 +63,9 @@ void PlanetLevelScene::init()
 
     numPickupsText = new Text();
     speedPowerupText = new Text();
+    reloadPowerupText = new Text();
+    instakillPowerupText = new Text();
+    healthPowerupText = new Text();
     powerupBorder = new RectangleShape();
     powerupBackground = new RectangleShape();
     powerupTimer = new RectangleShape();
@@ -189,8 +192,23 @@ void PlanetLevelScene::Load() {
 
     speedPowerupText->setString("[1] Speed-Up (1 material)");
     speedPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
-    speedPowerupText->setCharacterSize(20);
+    speedPowerupText->setCharacterSize(15);
     speedPowerupText->setPosition(50, 100);
+
+    reloadPowerupText->setString("[2] Reload++ (2 materials)");
+    reloadPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    reloadPowerupText->setCharacterSize(15);
+    reloadPowerupText->setPosition(50, 125);
+
+    instakillPowerupText->setString("[3] Insta-kill (3 materials)");
+    instakillPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    instakillPowerupText->setCharacterSize(15);
+    instakillPowerupText->setPosition(50, 150);
+
+    healthPowerupText->setString("[4] Heal (5 materials)");
+    healthPowerupText->setFont(*Resources::get<Font>("RobotoMono-Regular.ttf"));
+    healthPowerupText->setCharacterSize(15);
+    healthPowerupText->setPosition(50, 175);
 
     powerupBorder->setSize(Vector2f(40, 310));
     powerupBorder->setFillColor(Color::White);
@@ -349,6 +367,9 @@ void PlanetLevelScene::Render() {
     Engine::GetWindow().draw(*healthText);
     Engine::GetWindow().draw(*numPickupsText);
     Engine::GetWindow().draw(*speedPowerupText);
+    Engine::GetWindow().draw(*reloadPowerupText);
+    Engine::GetWindow().draw(*instakillPowerupText);
+    Engine::GetWindow().draw(*healthPowerupText);
     Engine::GetWindow().draw(*powerupBorder);
     Engine::GetWindow().draw(*powerupBackground);
     Engine::GetWindow().draw(*powerupTimer);

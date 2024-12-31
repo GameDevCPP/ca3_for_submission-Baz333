@@ -36,6 +36,9 @@ public:
 
 	sf::Text* numPickupsText;
 	sf::Text* speedPowerupText;
+	sf::Text* reloadPowerupText;
+	sf::Text* instakillPowerupText;
+	sf::Text* healthPowerupText;
 	sf::RectangleShape* powerupBorder;
 	sf::RectangleShape* powerupBackground;
 	sf::RectangleShape* powerupTimer;

@@ -21,3 +21,15 @@ public:
 	explicit SpeedPowerupComponent(Entity* p);
 	~SpeedPowerupComponent() override = default;
 };
+
+class ReloadPowerupComponent : public PowerupComponent {
+public:
+	explicit ReloadPowerupComponent(Entity* p);
+	~ReloadPowerupComponent() override = default;
+};
+
+class InstakillPowerupComponent : public PowerupComponent {
+public:
+	explicit InstakillPowerupComponent(Entity* p);
+	~InstakillPowerupComponent() override = default;
+};
