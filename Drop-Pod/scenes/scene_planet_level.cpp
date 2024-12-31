@@ -250,14 +250,17 @@ void PlanetLevelScene::Update(const double& dt) {
     if (!pauseGame)
     {
         // Player updates -----------------------------------------------------------------------------------------------
-        fireTime -= dt;
         auto reloadPowerup = player->GetCompatibleComponent<ReloadPowerupComponent>();
+        auto speedPowerup = player->GetCompatibleComponent<SpeedPowerupComponent>();
+        auto instakillPowerup = player->GetCompatibleComponent<InstakillPowerupComponent>();
+        auto movementCmp = player->GetCompatibleComponent<ActorMovementComponent>()[0];
+        auto powerup = player->GetCompatibleComponent<PowerupComponent>();
+
+        fireTime -= dt;
         if(!reloadPowerup.empty()) {
             fireTime -= dt;
         }
 
-        auto speedPowerup = player->GetCompatibleComponent<SpeedPowerupComponent>();
-        auto movementCmp = player->GetCompatibleComponent<ActorMovementComponent>()[0];
         if(!speedPowerup.empty()) {
             auto remainingTime = speedPowerup[0]->getRemainingTime();
             auto maxTime = speedPowerup[0]->getMaxTimer();
@@ -270,7 +273,6 @@ void PlanetLevelScene::Update(const double& dt) {
             movementCmp->setSpeed(200.f);
         }
 
-        auto powerup = player->GetCompatibleComponent<PowerupComponent>();
         if(!powerup.empty()) {
             auto remainingTime = powerup[0]->getRemainingTime();
             auto maxTime = powerup[0]->getMaxTimer();
@@ -283,7 +285,7 @@ void PlanetLevelScene::Update(const double& dt) {
         }
 
         if (fireTime <= 0 && Mouse::isButtonPressed(Mouse::Left)) {
-            player->GetCompatibleComponent<ShootingComponent>()[0]->Fire();
+            player->GetCompatibleComponent<ShootingComponent>()[0]->Fire(!instakillPowerup.empty());
             fireTime = 0.5f;
             soundShoot->play();
         }

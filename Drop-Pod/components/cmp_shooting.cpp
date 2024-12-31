@@ -39,11 +39,11 @@ void ShootingComponent::render() {
 	Bullet::render();
 }
 
-void ShootingComponent::Fire() {
+void ShootingComponent::Fire(bool isInstakill) {
 	auto spriteSize = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
 	Vector2f spriteCenter = Vector2f(spriteSize.width * 0.5, spriteSize.height * 0.5);
 	// Firing the bullets
-	Bullet::fire(_parent->getPosition());
+	Bullet::fire(_parent->getPosition(), isInstakill);
 }
 
 Bullet::Bullet()
@@ -83,7 +83,7 @@ void Bullet::render() {
 	}
 }
 
-void Bullet::fire(const Vector2f& pos) {
+void Bullet::fire(const Vector2f& pos, bool isInstakill) {
 	RenderWindow& window = Engine::GetWindow();
 
 	auto mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
@@ -92,6 +92,9 @@ void Bullet::fire(const Vector2f& pos) {
 	bulletCount = bulletCount % 256;
 	bullets[bulletCount].setPosition(pos);
 	bullets[bulletCount].isVisible = true;
+	if(isInstakill) {
+		bullets[bulletCount]._damage = 1000;
+	}
 
 	// Sets the angle of the bullet.
 	*angleshot = atan2(mousePos.y - bullets[bulletCount].getPosition().y, mousePos.x - bullets[bulletCount].getPosition().x);
