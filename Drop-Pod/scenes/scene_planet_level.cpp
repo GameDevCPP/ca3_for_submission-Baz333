@@ -12,6 +12,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include <bits/random.h>
 
 #include "../components/cmp_pickup.h"
 #include "../components/cmp_powerup_speed.h"
@@ -68,6 +69,19 @@ void PlanetLevelScene::init()
 
     // Shooting Delay
     fireTime = 0.f;
+
+    bgmFiles = {
+    "res/sound/game_bgm/brawl.wav",
+    "res/sound/game_bgm/cocked.wav",
+    "res/sound/game_bgm/crater.wav",
+    "res/sound/game_bgm/good_luck.wav",
+    "res/sound/game_bgm/howl.wav",
+    "res/sound/game_bgm/inebriated.wav",
+    "res/sound/game_bgm/plates.wav",
+    "res/sound/game_bgm/reps.wav",
+    "res/sound/game_bgm/scalpels.wav",
+    "res/sound/game_bgm/spartan.wav"
+    };
 }
 
 void PlanetLevelScene::Load() {
@@ -265,6 +279,23 @@ void PlanetLevelScene::Update(const double& dt) {
                 SpawnPickups();
             }
             totalTime = 0;
+        }
+
+        //Music update ----------------------------------------------------------------------------
+        auto musicstatus = music.getStatus();
+        if (musicstatus == SoundSource::Stopped || musicstatus == SoundSource::Paused)
+        {
+            std::random_device rd;
+            int randomIndex = rd() % 10;
+            std::string randomSong = bgmFiles[randomIndex];
+            if (!music.openFromFile(randomSong)) {
+                std::cerr << "Failed to load music: " << randomSong << std::endl;
+            } else {
+                std::cout << "Now playing: " << randomSong << std::endl;
+            }
+            music.setVolume(volume / 4); //the music was very loud :/
+            music.setLoop(false);
+            music.play();
         }
 
         // HUD update -----------------------------------------------------------------------------

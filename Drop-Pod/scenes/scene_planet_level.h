@@ -40,6 +40,9 @@ public:
 	sf::RectangleShape* powerupBackground;
 	sf::RectangleShape* powerupTimer;
 
+	std::vector<std::string> bgmFiles;
+	sf::Music music;
+
 	// Enemies
 	float totalTime;
 	int monsterCount;

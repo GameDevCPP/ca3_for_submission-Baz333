@@ -59,7 +59,7 @@ void MenuScene::Load() {
     if (musicstatus == SoundSource::Stopped || musicstatus == SoundSource::Paused)
     {
         //A more typical and better approach to just simply print an error message might be to use a try-catch block.
-        if (!music.openFromFile("res/sound/Cold-Moon.ogg")) //How can We Ensure that we alway load the correct asset without having to recompile?? DF.
+        if (!music.openFromFile("res/sound/Clair_de_lune.ogg")) //How can We Ensure that we alway load the correct asset without having to recompile?? DF.
             std::cerr << "music broken" <<std::endl; // DF. error message logging is preferred
         music.setVolume(volume);
         music.setLoop(true);
